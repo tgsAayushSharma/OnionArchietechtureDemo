@@ -5,36 +5,44 @@ using System.Threading.Tasks;
 using DataAccess.DataActions.Interface;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace DataAccess.DataActions
 {
-    public class DataActionClass : IDataAction
+    public class DataActionClass<T> : IDataAction<T> where T : Employee
     {
         private readonly EmployeeContext _context;
-        public DataActionClass(EmployeeContext context)
+        private DbSet<T> entities;
+        private readonly ILogger _logger;
+
+        public DataActionClass(EmployeeContext context, ILogger logger)
         {
             _context = context;
+            entities = context.Set<T>();
+            _logger = logger;
         }
 
-        public IEnumerable<Employee> GetAllEmployees()
+        public IEnumerable<T> GetAll()
         {
-            return _context.Employees.ToList();
+            return entities.ToList();
         }
 
-        public Employee GetEmployeeById(int id)
+        public T GetById(int id)
         {
-            return _context.Employees.FirstOrDefault(x => x.Id == id) ??
-                throw new Exception("No Employee found with the given id.");
+            return entities.FirstOrDefault(x => x.Id == id) ??
+                throw new Exception("No Data found with the given id.");
         }
 
-        public void AddEmployee(Employee employeeEntity)
+        public void AddData(T entity)
         {
             try
             {
-                employeeEntity.Created = DateTime.Now;
+                if (entity == null) throw new ArgumentException("Entity is null.");
+                entity.Created = DateTime.Now;
 
-                _context.Add(employeeEntity);
+                entities.Add(entity);
                 _context.SaveChanges();
+                _logger.Information("Data Added into the DataBase successfully.");
             }
             catch (Exception ex)
             {
@@ -42,16 +50,18 @@ namespace DataAccess.DataActions
             }
         }
 
-        public void UpdateEmployee(Employee employeeEntity)
+        public void UpdateData(T entity)
         {
             try
             {
-                var existingemployee = _context.Employees.FirstOrDefault(x => x.Id == employeeEntity.Id) ??
-                    throw new Exception("No Employee found with the given identifier.");
+                var existing = entities.FirstOrDefault(x => x.Id == entity.Id) ??
+                    throw new Exception("No Data found with the given identifier.");
 
-                _context.Entry(existingemployee).State = EntityState.Modified;
-                _context.Entry(existingemployee).CurrentValues.SetValues(employeeEntity);
+                _context.Entry(existing).State = EntityState.Modified;
+                _context.Entry(existing).CurrentValues.SetValues(entity);
                 _context.SaveChanges();
+                _logger.Information("Data Updated into the DataBase successfully.");
+
             }
             catch (Exception ex)
             {
@@ -59,16 +69,18 @@ namespace DataAccess.DataActions
             }
         }
 
-        public void DeleteEmployee(Employee employeeEntity)
+        public void DeleteData(int id)
         {
             try
             {
-                var existingemployee = _context.Employees.FirstOrDefault(x => x.Id == employeeEntity.Id) ??
-                    throw new Exception("No Employee found with the given identifier.");
+                var existing = entities.FirstOrDefault(x => x.Id == id) ??
+                    throw new Exception("No data found with the given identifier.");
 
-                _context.Entry(existingemployee).State = EntityState.Deleted;
-                _context.Remove(existingemployee);
+                _context.Entry(existing).State = EntityState.Deleted;
+                entities.Remove(existing);
                 _context.SaveChanges();
+                _logger.Information("Data deleted from the DataBase successfully.");
+
             }
             catch (Exception ex)
             {

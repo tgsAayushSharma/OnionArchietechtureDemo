@@ -1,22 +1,27 @@
-using BusinessLogic;
 using DataAccess.DataActions;
 using DataAccess.DataActions.Interface;
 using DataAccess.Models;
+using Serilog;
 using Service;
 using Service.Interface;
-using Service.Mappers;
-using Service.Mappers.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddDbContext<EmployeeContext>();
-builder.Services.AddScoped<IDataAction, DataActionClass>();
+builder.Services.AddScoped(typeof(IDataAction<>), typeof(DataActionClass<>));
 builder.Services.AddTransient<IServices, ServicesClass>();
-builder.Services.AddTransient<IDtoToEntityMappers, DtoToEntityMappers>();
-builder.Services.AddTransient<IDtoToDomainMappers, DtoToDomainMappers>();
-builder.Services.AddTransient<IDomainToEntityMappers, DomainToEntityMappers>();
+
+var logger = new LoggerConfiguration()
+               .ReadFrom.Configuration(builder.Configuration)
+               .Enrich.FromLogContext()
+               .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+builder.Host.UseSerilog(logger);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

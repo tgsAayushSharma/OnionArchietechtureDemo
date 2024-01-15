@@ -6,12 +6,12 @@ using DataAccess.Models;
 
 namespace DataAccess.DataActions.Interface
 {
-    public interface IDataAction
+    public interface IDataAction<T> where T : Employee
     {
-        IEnumerable<Employee> GetAllEmployees();
-        Employee GetEmployeeById(int id);
-        void AddEmployee(Employee employeeEntity);
-        void UpdateEmployee(Employee employeeEntity);
-        void DeleteEmployee(Employee employeeEntity);
+        IEnumerable<T> GetAll();
+        T GetById(int id);
+        void AddData(T employeeEntity);
+        void UpdateData(T employeeEntity);
+        void DeleteData(int id);
     }
 }

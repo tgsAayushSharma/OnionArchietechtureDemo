@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Models
 {
     public partial class EmployeeContext : DbContext
     {
-        public EmployeeContext()
+        private readonly IConfiguration _configuration;
+        public EmployeeContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public EmployeeContext(DbContextOptions<EmployeeContext> options)
+        public EmployeeContext(DbContextOptions<EmployeeContext> options, IConfiguration configuration)
             : base(options)
         {
+            _configuration = configuration;
+
         }
 
         public virtual DbSet<Employee> Employees { get; set; } = null!;
@@ -23,11 +28,7 @@ namespace DataAccess.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Employee;Trusted_Connection=true;TrustServerCertificate=true");
-            }
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Default"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,15 +83,32 @@ namespace DataAccess.Models
                 entity.Property(e => e.ZipCode)
                     .HasMaxLength(6)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.TblCountry)
+                      .WithMany(e => e.Employees)
+                      .HasForeignKey(d => d.Country)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Employee_Country");
+
+                entity.HasOne(d => d.TblState)
+                      .WithMany(e => e.Employees)
+                      .HasForeignKey(d => d.State)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Employee_State");
+
+                entity.HasOne(d => d.TblCity)
+                      .WithMany(e => e.Employees)
+                      .HasForeignKey(d => d.City)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Employee_City");
             });
 
             modelBuilder.Entity<TblCity>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("tbl_cities");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(30)
@@ -100,7 +118,7 @@ namespace DataAccess.Models
                 entity.Property(e => e.StateId).HasColumnName("state_id");
 
                 entity.HasOne(d => d.State)
-                    .WithMany()
+                    .WithMany(e => e.TblCities)
                     .HasForeignKey(d => d.StateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_City_State");
@@ -110,9 +128,7 @@ namespace DataAccess.Models
             {
                 entity.ToTable("tbl_countries");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(150)
@@ -129,13 +145,10 @@ namespace DataAccess.Models
             {
                 entity.ToTable("tbl_states");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.CountryId)
-                    .HasColumnName("country_id")
-                    .HasDefaultValueSql("((1))");
+                    .HasColumnName("country_id");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(30)

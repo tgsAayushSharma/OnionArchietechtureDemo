@@ -22,5 +22,9 @@ namespace DataAccess.Models
         public string? ZipCode { get; set; }
         public string? Password { get; set; }
         public DateTime? Created { get; set; }
+
+        public virtual TblCountry TblCountry { get; set; }
+        public virtual TblState TblState { get; set; }
+        public virtual TblCity TblCity { get; set; }
     }
 }

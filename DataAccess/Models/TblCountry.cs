@@ -8,6 +8,7 @@ namespace DataAccess.Models
         public TblCountry()
         {
             TblStates = new HashSet<TblState>();
+            Employees = new HashSet<Employee>();
         }
 
         public int Id { get; set; }
@@ -15,5 +16,6 @@ namespace DataAccess.Models
         public string Name { get; set; } = null!;
 
         public virtual ICollection<TblState> TblStates { get; set; }
+        public virtual ICollection<Employee> Employees { get; set; }
     }
 }

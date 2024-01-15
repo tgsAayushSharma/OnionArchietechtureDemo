@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using Service.Interface;
 using Service.ViewModels;
 
@@ -20,13 +22,13 @@ namespace API.Controllers
         }
 
         [HttpGet("GetAllEmployees")]
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+        public IEnumerable<Employee> GetAllEmployees()
         {
             return _service.GetAllEmployees();
         }
 
         [HttpGet("GetEmployeeById")]
-        public EmployeeDto GetEmployeeById(int id)
+        public Employee GetEmployeeById(int id)
         {
             var employee = _service.GetEmployeeById(id);
 
@@ -36,7 +38,28 @@ namespace API.Controllers
         [HttpPost("AddEmployee")]
         public string AddEmployee([FromForm] EmployeeDto employeeDto, IFormFile? photo)
         {
-            _service.AddEmployee(employeeDto, photo);
+            var employeeData = new Employee()
+            {
+                Id = employeeDto.Id,
+                FirstName = employeeDto.FirstName,
+                LastName = employeeDto.LastName,
+                Email = employeeDto.Email,
+                Gender = employeeDto.Gender,
+                MaritalStatus = employeeDto.MaritalStatus,
+                BirthDate = employeeDto.BirthDate,
+                Hobbies = employeeDto.Hobbies,
+                Photo = employeeDto.Photo,
+                Salary = employeeDto.Salary,
+                Address = employeeDto.Address,
+                Country = employeeDto.Country,
+                State = employeeDto.State,
+                City = employeeDto.City,
+                ZipCode = employeeDto.ZipCode,
+                Password = employeeDto.Password,
+                Created = employeeDto.Created
+            };
+
+            _service.AddEmployee(employeeData, photo);
 
             return "Employee Add Successfully!";
         }
@@ -44,7 +67,27 @@ namespace API.Controllers
         [HttpPut("UpdateEmployee")]
         public string UpdateEmployee(EmployeeDto employeeDto)
         {
-            _service.UpdateEmployee(employeeDto);
+            var employeeData = new Employee()
+            {
+                Id = employeeDto.Id,
+                FirstName = employeeDto.FirstName,
+                LastName = employeeDto.LastName,
+                Email = employeeDto.Email,
+                Gender = employeeDto.Gender,
+                MaritalStatus = employeeDto.MaritalStatus,
+                BirthDate = employeeDto.BirthDate,
+                Hobbies = employeeDto.Hobbies,
+                Photo = employeeDto.Photo,
+                Salary = employeeDto.Salary,
+                Address = employeeDto.Address,
+                Country = employeeDto.Country,
+                State = employeeDto.State,
+                City = employeeDto.City,
+                ZipCode = employeeDto.ZipCode,
+                Password = employeeDto.Password,
+                Created = employeeDto.Created
+            };
+            _service.UpdateEmployee(employeeData);
 
             return "Employee Data Update Successfully!";
         }
