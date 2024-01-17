@@ -12,9 +12,9 @@ namespace Service
 {
     public class ServicesClass : IServices
     {
-        private readonly IDataAction<Employee> _dataAction;
+        private readonly IRepository<Employee> _dataAction;
 
-        public ServicesClass(IDataAction<Employee> dataAction)
+        public ServicesClass(IRepository<Employee> dataAction)
         {
             _dataAction = dataAction;
         }
@@ -36,14 +36,16 @@ namespace Service
             _dataAction.AddData(employee);
         }
 
-        public void UpdateEmployee(Employee employee)
+        public void UpdateEmployee(Employee employee, IFormFile? photo)
         {
+            employee.Photo = GetFileNameFromImage(photo);
+
             _dataAction.UpdateData(employee);
         }
 
-        public void DeleteEmployee(int id)
+        public void DeleteEmployee(Employee employee)
         {
-            _dataAction.DeleteData(id);
+            _dataAction.DeleteData(employee);
 
         }
 
@@ -56,7 +58,7 @@ namespace Service
 
             //extracting file info
             FileInfo fileInfo = new FileInfo(photo.FileName);
-            string fileName = photo.FileName + fileInfo.Extension;
+            string fileName = photo.FileName;
 
             string fileNameWithPath = Path.Combine(path, fileName);
 

@@ -22,9 +22,9 @@ namespace DataAccess.Models
         }
 
         public virtual DbSet<Employee> Employees { get; set; } = null!;
-        public virtual DbSet<TblCity> TblCities { get; set; } = null!;
-        public virtual DbSet<TblCountry> TblCountries { get; set; } = null!;
-        public virtual DbSet<TblState> TblStates { get; set; } = null!;
+        public virtual DbSet<City> Cities { get; set; } = null!;
+        public virtual DbSet<Country> Countries { get; set; } = null!;
+        public virtual DbSet<State> States { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -84,29 +84,29 @@ namespace DataAccess.Models
                     .HasMaxLength(6)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.TblCountry)
+                entity.HasOne(d => d.Country)
                       .WithMany(e => e.Employees)
-                      .HasForeignKey(d => d.Country)
+                      .HasForeignKey(d => d.CountryId)
                       .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_Country");
 
-                entity.HasOne(d => d.TblState)
+                entity.HasOne(d => d.State)
                       .WithMany(e => e.Employees)
-                      .HasForeignKey(d => d.State)
+                      .HasForeignKey(d => d.StateId)
                       .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_State");
 
-                entity.HasOne(d => d.TblCity)
+                entity.HasOne(d => d.City)
                       .WithMany(e => e.Employees)
-                      .HasForeignKey(d => d.City)
+                      .HasForeignKey(d => d.CityId)
                       .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_City");
             });
 
-            modelBuilder.Entity<TblCity>(entity =>
+            modelBuilder.Entity<City>(entity =>
             {
 
-                entity.ToTable("tbl_cities");
+                entity.ToTable("Cities");
 
                 entity.HasKey(e => e.Id);
 
@@ -124,7 +124,7 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_City_State");
             });
 
-            modelBuilder.Entity<TblCountry>(entity =>
+            modelBuilder.Entity<Country>(entity =>
             {
                 entity.ToTable("tbl_countries");
 
@@ -141,7 +141,7 @@ namespace DataAccess.Models
                     .HasColumnName("sortname");
             });
 
-            modelBuilder.Entity<TblState>(entity =>
+            modelBuilder.Entity<State>(entity =>
             {
                 entity.ToTable("tbl_states");
 

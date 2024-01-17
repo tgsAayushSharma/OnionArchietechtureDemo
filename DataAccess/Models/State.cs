@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class TblState
+    public partial class State
     {
-        public TblState()
+        public State()
         {
             Employees = new HashSet<Employee>();
-            TblCities = new HashSet<TblCity>();
+            TblCities = new HashSet<City>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public int CountryId { get; set; }
 
-        public virtual TblCountry Country { get; set; } = null!;
-        public virtual ICollection<TblCity> TblCities { get; set; }
+        public virtual Country Country { get; set; } = null!;
+        public virtual ICollection<City> TblCities { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
 
 

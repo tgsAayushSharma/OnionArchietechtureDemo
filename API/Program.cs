@@ -1,6 +1,7 @@
 using DataAccess.DataActions;
 using DataAccess.DataActions.Interface;
 using DataAccess.Models;
+using LoggingWithSerilog.Middleware;
 using Serilog;
 using Service;
 using Service.Interface;
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContext<EmployeeContext>();
-builder.Services.AddScoped(typeof(IDataAction<>), typeof(DataActionClass<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IServices, ServicesClass>();
 
 var logger = new LoggerConfiguration()
@@ -21,7 +22,7 @@ var logger = new LoggerConfiguration()
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
-builder.Host.UseSerilog(logger);
+// builder.Host.UseSerilog(logger);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -37,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 // app.UseHttpsRedirection();
 
 app.UseAuthorization();

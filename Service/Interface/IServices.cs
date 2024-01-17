@@ -13,7 +13,7 @@ namespace Service.Interface
         IEnumerable<Employee> GetAllEmployees();
         Employee GetEmployeeById(int id);
         void AddEmployee(Employee employee, IFormFile photo);
-        void UpdateEmployee(Employee employee);
-        void DeleteEmployee(int id);
+        void UpdateEmployee(Employee employee, IFormFile photo);
+        void DeleteEmployee(Employee employee);
     }
 }
