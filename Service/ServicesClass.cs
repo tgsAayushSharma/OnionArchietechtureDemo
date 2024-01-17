@@ -2,75 +2,50 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BusinessLogic.Domain;
 using DataAccess.DataActions.Interface;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using Service.Interface;
-using Service.Mappers.Interface;
 using Service.ViewModels;
 
 namespace Service
 {
     public class ServicesClass : IServices
     {
-        private readonly IDataAction _dataAction;
-        private readonly IDtoToEntityMappers _dtoToEntityMapper;
-        private readonly IDtoToDomainMappers _dtoToDomainMapper;
-        private readonly IDomainToEntityMappers _domainToEntityMapper;
+        private readonly IRepository<Employee> _dataAction;
 
-        public ServicesClass(IDataAction dataAction, IDtoToEntityMappers dtoToEntityMappers, IDtoToDomainMappers dtoToDomainMappers, IDomainToEntityMappers domainToEntityMappers)
+        public ServicesClass(IRepository<Employee> dataAction)
         {
             _dataAction = dataAction;
-            _dtoToEntityMapper = dtoToEntityMappers;
-            _dtoToDomainMapper = dtoToDomainMappers;
-            _domainToEntityMapper = domainToEntityMappers;
         }
 
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+        public IEnumerable<Employee> GetAllEmployees()
         {
-            var employees = _dataAction.GetAllEmployees();
-
-            var employeeDto = _dtoToEntityMapper.ConvertEmployeesEntityToDto(employees);
-
-            return employeeDto;
+            return _dataAction.GetAll();
         }
 
-        public EmployeeDto GetEmployeeById(int id)
+        public Employee GetEmployeeById(int id)
         {
-            var employeeEntity = _dataAction.GetEmployeeById(id);
-
-            var employeeDto = _dtoToEntityMapper.ConvertEmployeeEntityToDto(employeeEntity);
-
-            return employeeDto;
+            return _dataAction.GetById(id);
         }
 
-        public string AddEmployee(EmployeeDto employeeDto, IFormFile? photo)
+        public void AddEmployee(Employee employee, IFormFile? photo)
         {
-            var employeeDomain = _dtoToDomainMapper.ConvertEmployeeDtoToDomain(employeeDto);
+            employee.Photo = GetFileNameFromImage(photo);
 
-            // var employee = employeeDomain.AddEmployeeImage(employeeDto.Id, photo);
-
-            var employeeEntity = _domainToEntityMapper.ConvertEmployeeDomainToEntity(employeeDomain);
-
-            employeeEntity.Photo = GetFileNameFromImage(photo);
-
-            _dataAction.AddEmployee(employeeEntity);
-
-            return "Success";
+            _dataAction.AddData(employee);
         }
 
-        public void UpdateEmployee(EmployeeDto employeeDto)
+        public void UpdateEmployee(Employee employee, IFormFile? photo)
         {
-            var employeeEntity = _dtoToEntityMapper.ConvertEmployeeDtoToEntity(employeeDto);
+            employee.Photo = GetFileNameFromImage(photo);
 
-            _dataAction.UpdateEmployee(employeeEntity);
+            _dataAction.UpdateData(employee);
         }
 
-        public void DeleteEmployee(int id)
+        public void DeleteEmployee(Employee employee)
         {
-            var employeeEntity = _dataAction.GetEmployeeById(id);
-
-            _dataAction.DeleteEmployee(employeeEntity);
+            _dataAction.DeleteData(employee);
 
         }
 
@@ -83,7 +58,7 @@ namespace Service
 
             //extracting file info
             FileInfo fileInfo = new FileInfo(photo.FileName);
-            string fileName = photo.FileName + fileInfo.Extension;
+            string fileName = photo.FileName;
 
             string fileNameWithPath = Path.Combine(path, fileName);
 

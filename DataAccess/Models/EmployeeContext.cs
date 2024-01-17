@@ -2,32 +2,33 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Models
 {
     public partial class EmployeeContext : DbContext
     {
-        public EmployeeContext()
+        private readonly IConfiguration _configuration;
+        public EmployeeContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public EmployeeContext(DbContextOptions<EmployeeContext> options)
+        public EmployeeContext(DbContextOptions<EmployeeContext> options, IConfiguration configuration)
             : base(options)
         {
+            _configuration = configuration;
+
         }
 
         public virtual DbSet<Employee> Employees { get; set; } = null!;
-        public virtual DbSet<TblCity> TblCities { get; set; } = null!;
-        public virtual DbSet<TblCountry> TblCountries { get; set; } = null!;
-        public virtual DbSet<TblState> TblStates { get; set; } = null!;
+        public virtual DbSet<City> Cities { get; set; } = null!;
+        public virtual DbSet<Country> Countries { get; set; } = null!;
+        public virtual DbSet<State> States { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Employee;Trusted_Connection=true;TrustServerCertificate=true");
-            }
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Default"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,15 +83,32 @@ namespace DataAccess.Models
                 entity.Property(e => e.ZipCode)
                     .HasMaxLength(6)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Country)
+                      .WithMany(e => e.Employees)
+                      .HasForeignKey(d => d.CountryId)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Employee_Country");
+
+                entity.HasOne(d => d.State)
+                      .WithMany(e => e.Employees)
+                      .HasForeignKey(d => d.StateId)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Employee_State");
+
+                entity.HasOne(d => d.City)
+                      .WithMany(e => e.Employees)
+                      .HasForeignKey(d => d.CityId)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Employee_City");
             });
 
-            modelBuilder.Entity<TblCity>(entity =>
+            modelBuilder.Entity<City>(entity =>
             {
-                entity.HasNoKey();
 
-                entity.ToTable("tbl_cities");
+                entity.ToTable("Cities");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(30)
@@ -100,19 +118,17 @@ namespace DataAccess.Models
                 entity.Property(e => e.StateId).HasColumnName("state_id");
 
                 entity.HasOne(d => d.State)
-                    .WithMany()
+                    .WithMany(e => e.TblCities)
                     .HasForeignKey(d => d.StateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_City_State");
             });
 
-            modelBuilder.Entity<TblCountry>(entity =>
+            modelBuilder.Entity<Country>(entity =>
             {
                 entity.ToTable("tbl_countries");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(150)
@@ -125,17 +141,14 @@ namespace DataAccess.Models
                     .HasColumnName("sortname");
             });
 
-            modelBuilder.Entity<TblState>(entity =>
+            modelBuilder.Entity<State>(entity =>
             {
                 entity.ToTable("tbl_states");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.CountryId)
-                    .HasColumnName("country_id")
-                    .HasDefaultValueSql("((1))");
+                    .HasColumnName("country_id");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(30)

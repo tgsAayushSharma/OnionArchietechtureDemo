@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using Service.ViewModels;
 
@@ -9,10 +10,10 @@ namespace Service.Interface
 {
     public interface IServices
     {
-        IEnumerable<EmployeeDto> GetAllEmployees();
-        EmployeeDto GetEmployeeById(int id);
-        string AddEmployee(EmployeeDto employeeDto, IFormFile photo);
-        void UpdateEmployee(EmployeeDto employeeDto);
-        void DeleteEmployee(int id);
+        IEnumerable<Employee> GetAllEmployees();
+        Employee GetEmployeeById(int id);
+        void AddEmployee(Employee employee, IFormFile photo);
+        void UpdateEmployee(Employee employee, IFormFile photo);
+        void DeleteEmployee(Employee employee);
     }
 }

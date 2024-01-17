@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Bh34KyRJvqo89H23mFasjpBqj8vVnko0fZjagyRJSNU=",
+  "Hash": "l0r8wvCBgFq1b4R6VbUVbogNrvr54kS+5/v6pjb2gAQ=",
   "Source": "API",
   "BasePath": "_content/API",
   "Mode": "Default",
@@ -49,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Files\\download (2).jpg.jpg"
+    },
+    {
+      "Identity": "D:\\Aayush\\OnionArchitechtureDemo\\API\\wwwroot\\Files\\download (3).jpg.jpg",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Aayush\\OnionArchitechtureDemo\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "Files/download (3).jpg.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Files\\download (3).jpg.jpg"
     },
     {
       "Identity": "D:\\Aayush\\OnionArchitechtureDemo\\API\\wwwroot\\Files\\download.jpg.jpg",

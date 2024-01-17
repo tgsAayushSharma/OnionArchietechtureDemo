@@ -102,6 +102,7 @@ D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.EntityFrameworkC
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.Identity.Client.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
@@ -113,6 +114,15 @@ D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.IdentityModel.To
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.OpenApi.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.SqlServer.Server.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.AspNetCore.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Extensions.Hosting.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Extensions.Logging.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Formatting.Compact.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Settings.Configuration.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Sinks.Console.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Sinks.Debug.dll
+D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Serilog.Sinks.File.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Aayush\OnionArchitechtureDemo\API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
